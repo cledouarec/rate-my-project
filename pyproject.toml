@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.0.0"
+version = "0.1.0"
 version_files = [
     "src/rate_my_project/__init__.py:__version__",
     "pyproject.toml:version"
