@@ -13,25 +13,25 @@
 
 ## Overview
 
-**rate_my_project** is a tool designed to help analyze and improve the
+**rate my project** is a tool designed to help analyze and improve the
 efficiency of a project and the team working on it. It does this by integrating
 with Jira, a popular project management tool from Atlassian, to retrieve data
 and statistics about the project's progress and the team's performance.
 
 ![Demo](https://github.com/cledouarec/rate_my_project/raw/main/examples/demo.png)
 
-By collecting this data from Jira, **rate_my_project** can provide an objective
+By collecting this data from Jira, **rate my project** can provide an objective
 view of the project's status and help identify areas for improvement. This can
 include metrics such as how long tasks take to complete, how many tasks are
 being completed on time, and how much work is being done by each team member.
 
-In addition to analyzing the data, **rate_my_project** also offers the ability
+In addition to analyzing the data, **rate my project** also offers the ability
 to produce reports in Confluence, another popular collaboration tool in
 Atlassian suite. These reports can help visualize the data collected by
-**rate_my_project** and communicate it to stakeholders, team members, and other
+**rate my project** and communicate it to stakeholders, team members, and other
 interested parties.
 
-Overall, **rate_my_project** is a useful tool for project managers and team
+Overall, **rate my project** is a useful tool for project managers and team
 leaders who want to improve their team's efficiency and effectiveness. By using
 data to gain an objective view of the project's progress, they can make
 informed decisions and take actions that lead to better outcomes.
@@ -43,7 +43,7 @@ informed decisions and take actions that lead to better outcomes.
 You can install easily with the following command or insert into your
 requirements file :
 ```
-pip install rate_my_project
+pip install rate-my-project
 ```
 
 ### From sources
