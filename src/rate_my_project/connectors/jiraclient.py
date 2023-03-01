@@ -47,11 +47,11 @@ class JiraClient:
         logger.debug("Create Jira client")
 
         if not jira_url:
-            raise Exception("Jira URL is invalid")
+            raise ValueError("Jira URL is invalid")
         if not jira_username:
-            raise Exception("Jira username is invalid")
+            raise ValueError("Jira username is invalid")
         if not jira_password:
-            raise Exception("Jira password is invalid")
+            raise ValueError("Jira password is invalid")
 
         self._http_client: HttpClient = HttpClient(
             jira_url.rstrip("/") + f"/rest/api/{self.API_VERSION}/",
@@ -106,7 +106,7 @@ class JiraClient:
             "jql/parse", self.STANDARD_HEADERS, query
         )
         if "errors" in response["queries"][0]:
-            raise Exception(response["queries"][0]["errors"][0])
+            raise ValueError(response["queries"][0]["errors"][0])
 
     async def tickets_from_jql(
         self, jql: str, fields: Optional[Union[List[str], str]] = None

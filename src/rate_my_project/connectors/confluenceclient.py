@@ -48,11 +48,11 @@ class ConfluenceClient:
         logger.debug("Create Confluence client")
 
         if not confluence_url:
-            raise Exception("Confluence URL is invalid")
+            raise ValueError("Confluence URL is invalid")
         if not confluence_username:
-            raise Exception("Confluence username is invalid")
+            raise ValueError("Confluence username is invalid")
         if not confluence_password:
-            raise Exception("Confluence password is invalid")
+            raise ValueError("Confluence password is invalid")
 
         self._http_client: HttpClient = HttpClient(
             confluence_url.rstrip("/") + "/wiki/rest/api/",
@@ -90,7 +90,7 @@ class ConfluenceClient:
             "content", self.STANDARD_HEADERS, query
         )
         if not response["results"]:
-            raise Exception("Page not found")
+            raise ValueError("Page not found")
         return response["results"][0]
 
     async def get_page_content_id(self, space: str, title: str) -> int:

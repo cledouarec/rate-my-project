@@ -15,7 +15,7 @@ from .dashboard import start_web_application
 from .report import generate_all_reports
 
 
-@click.group(context_settings=dict(help_option_names=["-h", "--help"]))
+@click.group(context_settings={"help_option_names": ["-h", "--help"]})
 @click.option("-v", "--verbose", is_flag=True, help="Enables verbose mode.")
 def cli(verbose: bool = False) -> None:
     """
