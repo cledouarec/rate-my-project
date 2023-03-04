@@ -1,15 +1,21 @@
 # Rate my project
 
-[![Lint](https://github.com/cledouarec/rate_my_project/actions/workflows/lint.yaml/badge.svg)](https://github.com/cledouarec/rate_my_project/actions/workflows/lint.yaml)
-[![Unit tests](https://github.com/cledouarec/rate_my_project/actions/workflows/test.yaml/badge.svg)](https://github.com/cledouarec/rate_my_project/actions/workflows/test.yaml)
+[![Lint](https://github.com/cledouarec/rate-my-project/actions/workflows/lint.yaml/badge.svg)](https://github.com/cledouarec/rate-my-project/actions/workflows/lint.yaml)
+[![Unit tests](https://github.com/cledouarec/rate-my-project/actions/workflows/test.yaml/badge.svg)](https://github.com/cledouarec/rate-my-project/actions/workflows/test.yaml)
 
 **Table of Contents**
-* [Overview](#Overview)
-* [Installation](#Installation)
-* [Usage](#Usage)
-* [Configuration](#Configuration)
-    * [Server configuration](#Server-configuration)
-    * [Project configuration](#Project-configuration)
+- [Rate my project](#rate-my-project)
+  - [Overview](#overview)
+  - [Installation](#installation)
+    - [From PyPI (Recommended)](#from-pypi-recommended)
+    - [From sources](#from-sources)
+  - [Usage](#usage)
+    - [Exploration mode](#exploration-mode)
+    - [Report mode](#report-mode)
+  - [Configuration](#configuration)
+    - [Server configuration](#server-configuration)
+    - [Fields configuration](#fields-configuration)
+    - [Project configuration](#project-configuration)
 
 ## Overview
 
@@ -18,7 +24,7 @@ efficiency of a project and the team working on it. It does this by integrating
 with Jira, a popular project management tool from Atlassian, to retrieve data
 and statistics about the project's progress and the team's performance.
 
-![Demo](https://github.com/cledouarec/rate_my_project/raw/main/examples/demo.png)
+![Demo](https://github.com/cledouarec/rate-my-project/raw/main/examples/demo.png)
 
 By collecting this data from Jira, **rate my project** can provide an objective
 view of the project's status and help identify areas for improvement. This can
