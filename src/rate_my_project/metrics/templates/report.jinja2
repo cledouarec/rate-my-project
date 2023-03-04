@@ -1,8 +1,0 @@
-h1. Disclaimer
-This report summarize the efficiency of a project with various metrics.
-
-h1. Status per type
-{%- for issue_type in metric_reports["Status"].report_data["issue_types"] %}
-h2. Status per {{ issue_type }}
-!{{ issue_type }}.png|align=center, hspace=0!
-{%- endfor %}

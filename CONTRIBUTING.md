@@ -81,24 +81,42 @@ The changelog is updated automatically by the github action.
 
 ### Set up
 
-It is recommended to use a virtual environment :
+This is no different than other Rust projects.
+
 ```shell
-python -m venv venv
+git clone https://github.com/cledouarec/rate-my-project
+cd rate-my-project
+cargo test
 ```
-To install the module and the main script, simply do :
-```
-pip install .
-```
-It is useful to install extra tools.
-These tools can be installed with the following command :
-```
-pip install '.[dev]'
-```
-The Git hooks can be installed with :
-```
-pre-commit install
-```
-The hooks can be run manually at any time :
-```
-pre-commit run --all-file
-```
+
+### Useful Commands
+
+- Build and run release version:
+
+  ```shell
+  cargo build --release && cargo run --release
+  ```
+
+- Run Clippy:
+
+  ```shell
+  cargo clippy --all-targets --all-features --workspace
+  ```
+
+- Run all tests:
+
+  ```shell
+  cargo test --all-features --workspace
+  ```
+
+- Check to see if there are code formatting issues
+
+  ```shell
+  cargo fmt --all -- --check
+  ```
+
+- Format the code in the project
+
+  ```shell
+  cargo fmt --all
+  ```

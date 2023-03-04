@@ -1,7 +1,8 @@
 # Rate my project
 
-[![Lint](https://github.com/cledouarec/rate-my-project/actions/workflows/lint.yaml/badge.svg)](https://github.com/cledouarec/rate-my-project/actions/workflows/lint.yaml)
-[![Unit tests](https://github.com/cledouarec/rate-my-project/actions/workflows/test.yaml/badge.svg)](https://github.com/cledouarec/rate-my-project/actions/workflows/test.yaml)
+[![Crates.io](https://img.shields.io/crates/v/rate-my-project.svg)](https://crates.io/crates/rate-my-project)
+[![Docs.rs](https://docs.rs/rate-my-project/badge.svg)](https://docs.rs/rate-my-project)
+[![CI](https://github.com/cledouarec/rate-my-project/workflows/CI/badge.svg)](https://github.com/cledouarec/rate-my-project/actions)
 
 **Table of Contents**
 - [Rate my project](#rate-my-project)
@@ -45,41 +46,11 @@ informed decisions and take actions that lead to better outcomes.
 
 ## Installation
 
-### From PyPI (Recommended)
+### Cargo
 
-You can install easily with the following command or insert into your
-requirements file :
-```
-pip install rate-my-project
-```
-
-### From sources
-
-It is recommended to use a virtual environment :
-```shell
-python -m venv venv
-```
-To install the module and the main script, simply do :
-```shell
-pip install .
-```
-For the developers, it is useful to install extra tools like :
-* [pre-commit](https://pre-commit.com)
-* [pytest](http://docs.pytest.org)
-* [commitizen](https://commitizen-tools.github.io/commitizen/)
-
-These tools can be installed with the following command :
-```shell
-pip install '.[dev]'
-```
-The Git hooks can be installed with :
-```shell
-pre-commit install
-```
-The hooks can be run manually at any time :
-```shell
-pre-commit run --all-file
-```
+* Install the rust toolchain in order to have cargo installed by following
+  [this](https://www.rust-lang.org/tools/install) guide.
+* run `cargo install rate-my-project`
 
 ## Usage
 
