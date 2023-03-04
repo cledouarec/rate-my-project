@@ -16,6 +16,7 @@
     - [Server configuration](#server-configuration)
     - [Fields configuration](#fields-configuration)
     - [Project configuration](#project-configuration)
+  - [Contribution](#contribution)
 
 ## Overview
 
@@ -55,11 +56,11 @@ pip install rate-my-project
 ### From sources
 
 It is recommended to use a virtual environment :
-```
+```shell
 python -m venv venv
 ```
 To install the module and the main script, simply do :
-```
+```shell
 pip install .
 ```
 For the developers, it is useful to install extra tools like :
@@ -68,15 +69,15 @@ For the developers, it is useful to install extra tools like :
 * [commitizen](https://commitizen-tools.github.io/commitizen/)
 
 These tools can be installed with the following command :
-```
+```shell
 pip install '.[dev]'
 ```
 The Git hooks can be installed with :
-```
+```shell
 pre-commit install
 ```
 The hooks can be run manually at any time :
-```
+```shell
 pre-commit run --all-file
 ```
 
@@ -84,7 +85,7 @@ pre-commit run --all-file
 
 The full list of arguments supported can be displayed with the following
 helper :
-```
+```shell
 ./rate_my_project -h
 Usage: rate_my_project [OPTIONS] COMMAND [ARGS]...
 
@@ -107,7 +108,7 @@ The dashboard is a simple webapp which let the user entered a JQL query and
 interact with the results.
 
 This mode can be started by executing the following command :
-```
+```shell
 ./rate_my_project explore my_config.yaml
 ```
 The dashboard will be accessible at : http://127.0.0.1:8050
@@ -120,7 +121,7 @@ The objective of this mode is to automate the reporting after finding the
 right query in exploration mode.
 
 This mode can be started by executing the following command :
-```
+```shell
 ./rate_my_project report my_config.yaml
 ```
 
@@ -247,3 +248,11 @@ Projects:
 | Space            |    ✅     | Confluence destination space.<br/>                                                                                                    |
 | Parent page      |    ✅     | Confluence parent page of the report page.                                                                                            |
 | Template         |    ❌     | Path to Jinja2 template used to produce the report page.                                                                              |
+
+## Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, shall be as defined in the Apache-2.0 license
+without any additional terms or conditions.
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
