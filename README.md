@@ -132,9 +132,9 @@ The configuration file support 2 formats :
 - [JSON format](https://www.json.org)
 
 In the configuration file, there are 3 main sections required :
-- Server
-- Fields
-- Projects
+- `server`
+- `fields`
+- `projects`
 
 Some fields could use double quotes to preserve space in their names. The YAML
 syntax provides a solution by replacing with simple quote or escaping like
@@ -142,18 +142,18 @@ JSON :
 
 **_In Yaml :_**
 ```yaml
-JQL: 'project = "MY TEST"'
+jql: 'project = "MY TEST"'
 ```
 **_In Json :_**
 ```json
 {
-  "JQL": "project = \"MY TEST\""
+  "jql": "project = \"MY TEST\""
 }
 ```
 
 ### Server configuration
 
-The `Server` node will configure the URL of the Jira and Confluence server.
+The `server` node will configure the URL of the Jira and Confluence server.
 The credentials could be defined with environment variables or `.env` file.
 For the moment, only the username/token authentication is supported.
 
@@ -164,75 +164,75 @@ ATLASSIAN_TOKEN=<your token>
 
 **_In Yaml :_**
 ```yaml
-Server:
-  Jira: "https://my.jira.server.com"
-  Confluence: "https://my.confluence.server.com"
+server:
+  jira: "https://my.jira.server.com"
+  confluence: "https://my.confluence.server.com"
 ```
 **_In Json :_**
 ```json
 {
-  "Server": {
-    "Jira": "https://my.jira.server.com",
-    "Confluence": "https://my.confluence.server.com"
+  "server": {
+    "jira": "https://my.jira.server.com",
+    "confluence": "https://my.confluence.server.com"
   }
 }
 ```
 
 | Attribute  | Required | Description                                      |
 |------------|:--------:|--------------------------------------------------|
-| Server     |    ✅     | Main configuration node for server.              |
-| Jira       |    ✅     | Jira server URL to retrieve tickets information. |
-| Confluence |    ✅     | Confluence server URL to publish the report      |
+| server     |    ✅     | Main configuration node for server.              |
+| jira       |    ✅     | Jira server URL to retrieve tickets information. |
+| confluence |    ✅     | Confluence server URL to publish the report      |
 
 ### Fields configuration
 
-The `Fields` node will configure the field name to use since it could be custom
+The `fields` node will configure the field name to use since it could be custom
 fields.
 
 **_In Yaml :_**
 ```yaml
-Fields:
-  Sprint: "customfield_10001"
-  Story points: "customfield_10002"
+fields:
+  sprint: "customfield_10001"
+  story_points: "customfield_10002"
 ```
 **_In Json :_**
 ```json
 {
-  "Fields": {
-    "Sprint": "customfield_10001",
-    "Story points": "customfield_10002"
+  "fields": {
+    "sprint": "customfield_10001",
+    "story_points": "customfield_10002"
   }
 }
 ```
 
 | Attribute    | Required | Description                                                    |
 |--------------|:--------:|----------------------------------------------------------------|
-| Fields       |    ✅     | Main configuration node for fields.                            |
-| Sprint       |    ✅     | Field to store the current sprint                              |
-| Story points |    ✅     | Field to store the estimation in story points of a development |
+| fields       |    ✅     | Main configuration node for fields.                            |
+| sprint       |    ✅     | Field to store the current sprint                              |
+| story_points |    ✅     | Field to store the estimation in story points of a development |
 
 ### Project configuration
 
-The `Projects` node will provide the configuration for each project.
+The `projects` node will provide the configuration for each project.
 
 **_In Yaml :_**
 ```yaml
-Projects:
-  <Project name>:
-    JQL: "project = TEST"
-    Report:
-      Space: "SPACE"
-      Parent page: "My Parent Page"
+projects:
+  <project name>:
+    jql: "project = TEST"
+    report:
+      space: "SPACE"
+      parent_page: "My Parent Page"
 ```
 **_In Json :_**
 ```json
 {
-  "Projects": {
-    "<Project name>": {
-      "JQL": "project = TEST",
-      "Report": {
-        "Space": "SPACE",
-        "Parent page": "My Parent Page"
+  "projects": {
+    "<project name>": {
+      "jql": "project = TEST",
+      "report": {
+        "space": "SPACE",
+        "parent_page": "My Parent Page"
       }
     }
   }
@@ -241,13 +241,13 @@ Projects:
 
 | Attribute        | Required | Description                                                                                                                           |
 |------------------|:--------:|---------------------------------------------------------------------------------------------------------------------------------------|
-| Projects         |    ✅     | Main configuration node for all projects.                                                                                             |
-| \<Project name\> |    ✅     | Must be replaced by the name of the project.<br/>This name will be used as a title of the report.                                     |
-| JQL              |    ✅     | [JQL](https://www.atlassian.com/blog/jira-software/jql-the-most-flexible-way-to-search-jira-14) query to retrieve the list of tickets |
-| Report           |    ✅     | Configuration node for all attributes related to report generation                                                                    |
-| Space            |    ✅     | Confluence destination space.<br/>                                                                                                    |
-| Parent page      |    ✅     | Confluence parent page of the report page.                                                                                            |
-| Template         |    ❌     | Path to Jinja2 template used to produce the report page.                                                                              |
+| projects         |    ✅     | Main configuration node for all projects.                                                                                             |
+| \<project name\> |    ✅     | Must be replaced by the name of the project.<br/>This name will be used as a title of the report.                                     |
+| jql              |    ✅     | [JQL](https://www.atlassian.com/blog/jira-software/jql-the-most-flexible-way-to-search-jira-14) query to retrieve the list of tickets |
+| report           |    ✅     | Configuration node for all attributes related to report generation                                                                    |
+| space            |    ✅     | Confluence destination space.<br/>                                                                                                    |
+| parent_page      |    ✅     | Confluence parent page of the report page.                                                                                            |
+| template         |    ❌     | Path to Jinja2 template used to produce the report page.                                                                              |
 
 ## Contribution
 

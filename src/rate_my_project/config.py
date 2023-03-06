@@ -43,10 +43,10 @@ class Server(BaseModel):
     """
 
     #: Jira URL
-    jira: HttpUrl = Field(alias="Jira")
+    jira: HttpUrl
 
     #: Confluence URL
-    confluence: HttpUrl = Field(alias="Confluence")
+    confluence: HttpUrl
 
     class Config:
         """
@@ -62,9 +62,9 @@ class Fields(BaseModel):
     """
 
     #: Project name
-    sprint: str = Field(alias="Sprint")
+    sprint: str
     #: Query to retrieve tickets
-    story_points: str = Field(alias="Story points")
+    story_points: str
 
     class Config:
         """
@@ -80,11 +80,11 @@ class Report(BaseModel):
     """
 
     #: Confluence output space.
-    space: str = Field(alias="Space")
+    space: str
     #: Confluence parent page.
-    parent_page: str = Field(alias="Parent page")
+    parent_page: str
     #: Page template to use.
-    template: Optional[str] = Field("report.jinja2", alias="Template")
+    template: Optional[str] = Field("report.jinja2")
 
     class Config:
         """
@@ -100,13 +100,13 @@ class WorkflowState(BaseModel):
     """
 
     #: Workflow state name.
-    name: str = Field(alias="Name")
+    name: str
     #: Workflow state status to map.
-    status: List[str] = Field(alias="Status")
+    status: List[str]
     #: Start tag associated to this workflow state to compute lead time.
-    start: Optional[bool] = Field(False, alias="Start")
+    start: Optional[bool] = Field(False)
     #: Stop tag associated to this workflow state to compute lead time.
-    stop: Optional[bool] = Field(False, alias="Stop")
+    stop: Optional[bool] = Field(False)
 
     class Config:
         """
@@ -122,13 +122,13 @@ class Project(BaseModel):
     """
 
     #: Project name
-    name: str = Field(alias="Name")
+    name: str
     #: Query to retrieve tickets
-    jql: str = Field(alias="JQL")
+    jql: str
     #: Report configuration.
-    report: Report = Field(alias="Report")
+    report: Report
     # Workflow configuration.
-    workflow: List[WorkflowState] = Field(alias="Workflow")
+    workflow: List[WorkflowState]
 
     class Config:
         """
@@ -152,11 +152,11 @@ class Config(YamlModel):
     """
 
     #: Server configuration.
-    server: Server = Field(alias="Server")
+    server: Server
     #: Fields configuration
-    fields: Fields = Field(alias="Fields")
+    fields: Fields
     #: List of all projects
-    projects: List[Project] = Field(alias="Projects")
+    projects: List[Project]
 
     class Config:
         """

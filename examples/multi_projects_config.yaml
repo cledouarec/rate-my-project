@@ -1,41 +1,41 @@
-Server:
-  Jira: "https://my.jira.server.com"
-  Confluence: "https://my.confluence.server.com"
+server:
+  jira: "https://my.jira.server.com"
+  confluence: "https://my.confluence.server.com"
 
-Fields:
-  Sprint: "customfield_10001"
-  Story points: "customfield_10002"
+fields:
+  sprint: "customfield_10001"
+  story_points: "customfield_10002"
 
-Projects:
-  - Name: "Project name"
-    JQL: "project = TEST"
-    Report:
-      Space: "SPACE"
-      Parent page: "My Parent Page"
-    Workflow:
-      - Name: "Backlog"
-        Status:
+projects:
+  - name: "Project name"
+    jql: "project = TEST"
+    report:
+      space: "SPACE"
+      parent_page: "My Parent Page"
+    workflow:
+      - name: "Backlog"
+        status:
           - "Backlog"
-      - Name: "In progress"
-        Status:
+      - name: "In progress"
+        status:
           - "In progress"
           - "In review"
-      - Name: "Done"
-        Status:
+      - name: "Done"
+        status:
           - "Closed"
-  - Name: "Second project name"
-    JQL: "project = TEST2"
-    Report:
-      Space: "SPACE"
-      Parent page: "My Parent Page"
-    Workflow:
-      - Name: "Backlog"
-        Status:
+  - name: "Second project name"
+    jql: "project = TEST2"
+    report:
+      space: "SPACE"
+      parent_page: "My Parent Page"
+    workflow:
+      - name: "Backlog"
+        status:
           - "Backlog"
-      - Name: "In progress"
-        Status:
+      - name: "In progress"
+        status:
           - "In progress"
           - "In review"
-      - Name: "Done"
-        Status:
+      - name: "Done"
+        status:
           - "Closed"
