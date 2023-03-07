@@ -182,7 +182,7 @@ server:
 |------------|:--------:|--------------------------------------------------|
 | server     |    ✅     | Main configuration node for server.              |
 | jira       |    ✅     | Jira server URL to retrieve tickets information. |
-| confluence |    ✅     | Confluence server URL to publish the report      |
+| confluence |    ✅     | Confluence server URL to publish the report.     |
 
 ### Fields configuration
 
@@ -205,11 +205,11 @@ fields:
 }
 ```
 
-| Attribute    | Required | Description                                                    |
-|--------------|:--------:|----------------------------------------------------------------|
-| fields       |    ✅     | Main configuration node for fields.                            |
-| sprint       |    ✅     | Field to store the current sprint                              |
-| story_points |    ✅     | Field to store the estimation in story points of a development |
+| Attribute    | Required | Description                                                     |
+|--------------|:--------:|-----------------------------------------------------------------|
+| fields       |    ✅     | Main configuration node for fields.                             |
+| sprint       |    ✅     | Field to store the current sprint.                              |
+| story_points |    ✅     | Field to store the estimation in story points of a development. |
 
 ### Project configuration
 
@@ -223,6 +223,17 @@ projects:
     report:
       space: "SPACE"
       parent_page: "My Parent Page"
+    workflow:
+      - name: "Backlog"
+        status:
+          - "Backlog"
+      - name: "In progress"
+        status:
+          - "In progress"
+          - "In review"
+      - name: "Done"
+        status:
+          - "Closed"
 ```
 **_In Json :_**
 ```json
@@ -233,21 +244,64 @@ projects:
       "report": {
         "space": "SPACE",
         "parent_page": "My Parent Page"
-      }
+      },
+      "workflow": [
+        {
+          "name": "Backlog",
+          "status": [
+            "Backlog"
+          ]
+        },
+        {
+          "name": "In progress",
+          "status": [
+            "In progress",
+            "In review"
+          ]
+        },
+        {
+          "name": "Done",
+          "status": [
+            "Closed"
+          ]
+        }
+      ]
     }
   }
 }
 ```
 
-| Attribute        | Required | Description                                                                                                                           |
-|------------------|:--------:|---------------------------------------------------------------------------------------------------------------------------------------|
-| projects         |    ✅     | Main configuration node for all projects.                                                                                             |
-| \<project name\> |    ✅     | Must be replaced by the name of the project.<br/>This name will be used as a title of the report.                                     |
-| jql              |    ✅     | [JQL](https://www.atlassian.com/blog/jira-software/jql-the-most-flexible-way-to-search-jira-14) query to retrieve the list of tickets |
-| report           |    ✅     | Configuration node for all attributes related to report generation                                                                    |
-| space            |    ✅     | Confluence destination space.<br/>                                                                                                    |
-| parent_page      |    ✅     | Confluence parent page of the report page.                                                                                            |
-| template         |    ❌     | Path to Jinja2 template used to produce the report page.                                                                              |
+| Attribute        | Required | Description                                                                                                                            |
+|------------------|:--------:|----------------------------------------------------------------------------------------------------------------------------------------|
+| projects         |    ✅     | Main configuration node for all projects.                                                                                              |
+| \<project name\> |    ✅     | Must be replaced by the name of the project.<br/>This name will be used as a title of the report.                                      |
+| jql              |    ✅     | [JQL](https://www.atlassian.com/blog/jira-software/jql-the-most-flexible-way-to-search-jira-14) query to retrieve the list of tickets. |
+| report           |    ✅     | Configuration node for all attributes related to report generation.                                                                    |
+| space            |    ✅     | Confluence destination space.                                                                                                          |
+| parent_page      |    ✅     | Confluence parent page of the report page.                                                                                             |
+| workflow         |    ✅     | Configuration node for defining workflow.                                                                                              |
+
+#### Report configuration
+
+Specific configuration to publish the report on Confluence.
+
+| Attribute   | Required | Description                                              |
+|-------------|:--------:|----------------------------------------------------------|
+| space       |    ✅     | Confluence destination space.                            |
+| parent_page |    ✅     | Confluence parent page of the report page.               |
+| template    |    ❌     | Path to Jinja2 template used to produce the report page. |
+
+#### Workflow configuration
+
+The workflow defines a list of states. Each state permits to map several Jira
+state to a "Virtual" state to simplify the metrics charts. 
+
+| Attribute | Required | Description                                                                                                   |
+|-----------|:--------:|---------------------------------------------------------------------------------------------------------------|
+| name      |    ✅     | Confluence destination space.                                                                                 |
+| status    |    ✅     | Confluence parent page of the report page.                                                                    |
+| start     |    ❌     | Boolean value to define the current state is considered as the start of the work in order to compute metrics. |
+| stop      |    ❌     | Boolean value to define the current state is considered as the stop of the work in order to compute metrics.  |
 
 ## Contribution
 

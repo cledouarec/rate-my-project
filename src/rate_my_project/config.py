@@ -127,7 +127,7 @@ class Project(BaseModel):
     jql: str
     #: Report configuration.
     report: Report
-    # Workflow configuration.
+    #: Workflow configuration.
     workflow: List[WorkflowState]
 
     class Config:
