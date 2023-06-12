@@ -1,3 +1,9 @@
+## 1.1.0 (2023-06-12)
+
+### Feat
+
+- add fix version and parents in metrics data
+
 ## 1.0.0 (2023-03-06)
 
 ### Refactor
