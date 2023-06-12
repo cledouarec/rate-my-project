@@ -95,6 +95,26 @@ class JiraClient:
 
         return responses
 
+    async def ticket(
+        self, key: str, fields: Optional[Union[List[str], str]] = None
+    ) -> dict:
+        """
+        Get ticket information from a given `key`.
+
+        :param key: Key of the ticket.
+        :param fields: list of fields, for example: ['priority', 'summary']
+        :return: Ticket information.
+        """
+        if fields is None:
+            fields = "*all"
+
+        query = {
+            "fields": fields,
+        }
+        return await self._http_client.get(
+            f"issue/{key}", self.STANDARD_HEADERS, query
+        )
+
     async def validate_jql(self, jql: str):
         """
         Validate `jql` request.
@@ -159,6 +179,35 @@ class JiraClient:
             tasks.append(task)
 
         return await asyncio.gather(*tasks)
+
+    async def parents_from_tickets(self, tickets: list) -> list:
+        """
+        Get parents information from a list of `tickets`.
+
+        :param tickets: List of tickets.
+        :return: List of parents information.
+        """
+        tasks = []
+        for ticket in tickets:
+            if ticket["fields"].get("parent"):
+                task = asyncio.create_task(
+                    self.ticket(ticket["fields"]["parent"]["key"])
+                )
+                tasks.append(task)
+
+        return await asyncio.gather(*tasks)
+
+    async def versions(self, key: str) -> list:
+        """
+        Get all versions of a given project ordered by ranking.
+
+        :param key: Key of the project.
+        :return: Versions list.
+        """
+        query = {"startAt": 0, "maxResults": 100, "orderBy": "-sequence"}
+        return await self._get_paginated(
+            f"project/{key}/version", self.STANDARD_HEADERS, query, "values"
+        )
 
     async def fields_information(self):
         """

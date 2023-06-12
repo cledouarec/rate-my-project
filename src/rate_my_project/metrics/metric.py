@@ -27,6 +27,9 @@ class MetricData:
     metrics and analysis.
     """
 
+    #: Raw data in case of advanced or custom processing needed
+    raw: tuple
+
     #: Basics information like title, reporter, type, nb sprint, etc
     info: pd.DataFrame
 
@@ -43,17 +46,21 @@ class MetricData:
         workflow: list,
         tickets: list,
         tickets_changelogs: list,
+        tickets_parents: list,
     ) -> MetricData:
         """
         Create data for metric from `tickets` and `changelogs` information.
 
         :param fields: Dictionary of fields to retrieve.
+        :param workflow: List of state in the workflow.
         :param tickets: List of tickets information.
         :param tickets_changelogs: List of changelogs associated to tickets.
-        :param workflow: List of state in the workflow.
+        :param tickets_parents: List of parent tickets associated to tickets.
         :return: Data for metric.
         """
         logger.debug("Create data for metric from tickets and changelogs")
+
+        raw = (fields, workflow, tickets, tickets_changelogs, tickets_parents)
 
         tickets_info = []
         tickets_changes = []
@@ -65,15 +72,26 @@ class MetricData:
             if not sprints:
                 sprints = []
 
+            fix_versions = []
+            for fix_version in ticket["fields"]["fixVersions"]:
+                fix_versions.append(fix_version["name"])
+
+            parent = None
+            if ticket["fields"].get("parent"):
+                parent = ticket["fields"]["parent"]["key"]
+
             tickets_info.append(
                 {
                     "key": key,
+                    "type": ticket["fields"]["issuetype"]["name"],
                     "summary": ticket["fields"]["summary"],
                     "reporter": ticket["fields"]["reporter"]["displayName"],
                     "story point": ticket["fields"].get(
                         fields["story_points"]
                     ),
                     "sprints": len(sprints),
+                    "versions": fix_versions,
+                    "parent": parent,
                 }
             )
             assignee = "Unassigned"
@@ -81,7 +99,6 @@ class MetricData:
             tickets_changes.append(
                 {
                     "key": key,
-                    "type": ticket["fields"]["issuetype"]["name"],
                     "date": isoparse(ticket["fields"]["created"]),
                     "assignee": assignee,
                     "status": status,
@@ -108,7 +125,6 @@ class MetricData:
                     tickets_changes.append(
                         {
                             "key": key,
-                            "type": ticket["fields"]["issuetype"]["name"],
                             "date": isoparse(changelog["created"]),
                             "assignee": assignee,
                             "status": status,
@@ -128,7 +144,7 @@ class MetricData:
         )
 
         logger.debug("Data for metric created")
-        return cls(tickets_info_df, tickets_changes_df, workflow)
+        return cls(raw, tickets_info_df, tickets_changes_df, workflow)
 
     @staticmethod
     def _map_status_from_workflow(status: str, workflow: list) -> str:
@@ -214,11 +230,21 @@ class Metric(ABC):
         :param figure: Graph.
         :return: Dash widgets.
         """
+        figure.update_traces(
+            hoverinfo="label+percent", textinfo="value+percent"
+        )
         return dbc.Col(
             dbc.Card(
                 [
                     dbc.CardHeader(title),
-                    dbc.CardBody(dcc.Graph(figure=figure)),
+                    dbc.CardBody(
+                        dcc.Graph(
+                            figure=figure,
+                            config={
+                                "displaylogo": False,
+                            },
+                        )
+                    ),
                 ]
             ),
             md=12,

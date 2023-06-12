@@ -64,7 +64,7 @@ class Status(Metric):
         """
         result = {}
 
-        groups = data.changes.groupby("type")
+        groups = data.changes.merge(data.info, on="key").groupby("type")
 
         for issue_type, group in groups:
             df_per_type = group[["key", "status"]].drop_duplicates(
