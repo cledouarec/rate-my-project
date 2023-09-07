@@ -5,11 +5,14 @@ Manage configuration file.
 """
 
 from dataclasses import dataclass
+import json
 import logging
+import pathlib
 from typing import List, Optional
 
-from pydantic import BaseModel, BaseSettings, Field, HttpUrl, SecretStr
-from pydantic_yaml import YamlModel
+from pydantic import BaseModel, ConfigDict, Field, HttpUrl, SecretStr
+from pydantic_settings import BaseSettings, SettingsConfigDict
+import yaml
 
 from .connectors import ConfluenceClient, JiraClient
 
@@ -22,22 +25,27 @@ class Secrets(BaseSettings):
     This class is used to store all secrets from environment variables.
     """
 
+    #: Specific configuration
+    model_config = SettingsConfigDict(
+        frozen=False, env_file=".env", env_file_encoding="utf-8"
+    )
+
     #: Username for Jira/Confluence
-    user: str = Field(env="ATLASSIAN_USER")
+    user: str = Field(alias="ATLASSIAN_USER")
     #: Token for Jira/Confluence
-    token: SecretStr = Field(env="ATLASSIAN_TOKEN")
-
-    class Config:
-        """
-        Specific configuration.
-        """
-
-        allow_mutation = False
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    token: SecretStr = Field(alias="ATLASSIAN_TOKEN")
 
 
-class Server(BaseModel):
+class ImmutableModel(BaseModel):
+    """
+    This class is used to have immutable model. It is used as base madel.
+    """
+
+    #: Specific configuration
+    model_config = ConfigDict(frozen=False)
+
+
+class Server(ImmutableModel):
     """
     This class is used to store server configuration.
     """
@@ -48,15 +56,8 @@ class Server(BaseModel):
     #: Confluence URL
     confluence: HttpUrl
 
-    class Config:
-        """
-        Specific configuration.
-        """
 
-        allow_mutation = False
-
-
-class Fields(BaseModel):
+class Fields(ImmutableModel):
     """
     This class is used to store fields configuration.
     """
@@ -66,15 +67,8 @@ class Fields(BaseModel):
     #: Query to retrieve tickets
     story_points: str
 
-    class Config:
-        """
-        Specific configuration.
-        """
 
-        allow_mutation = False
-
-
-class Report(BaseModel):
+class Report(ImmutableModel):
     """
     This class is used to store report configuration.
     """
@@ -86,15 +80,8 @@ class Report(BaseModel):
     #: Page template to use.
     template: Optional[str] = Field("report.jinja2")
 
-    class Config:
-        """
-        Specific configuration.
-        """
 
-        allow_mutation = False
-
-
-class WorkflowState(BaseModel):
+class WorkflowState(ImmutableModel):
     """
     This class is used to store report configuration.
     """
@@ -108,15 +95,8 @@ class WorkflowState(BaseModel):
     #: Stop tag associated to this workflow state to compute lead time.
     stop: Optional[bool] = Field(False)
 
-    class Config:
-        """
-        Specific configuration.
-        """
 
-        allow_mutation = False
-
-
-class Project(BaseModel):
+class Project(ImmutableModel):
     """
     This class is used to store project configuration.
     """
@@ -130,23 +110,16 @@ class Project(BaseModel):
     #: Workflow configuration.
     workflow: List[WorkflowState]
 
-    class Config:
-        """
-        Specific configuration.
-        """
-
-        allow_mutation = False
-
     def workflow_to_dict(self) -> list:
         """
         Returns the workflow configuration in list of dictionary.
 
         :return: Configuration string in JSON format.
         """
-        return [workflow.dict() for workflow in self.workflow]
+        return [workflow.model_dump() for workflow in self.workflow]
 
 
-class Config(YamlModel):
+class Config(ImmutableModel):
     """
     This class is used to store main configuration excepted secrets.
     """
@@ -157,13 +130,6 @@ class Config(YamlModel):
     fields: Fields
     #: List of all projects
     projects: List[Project]
-
-    class Config:
-        """
-        Specific configuration.
-        """
-
-        allow_mutation = False
 
 
 @dataclass
@@ -186,8 +152,8 @@ class GlobalConfig:
         return f"""
         {
             {
-                "secrets": {self.secrets.json()},
-                "config": {self.config.json()}
+                "secrets": {self.secrets.model_dump_json()},
+                "config": {self.config.model_dump_json()}
             }
         }"""
 
@@ -198,7 +164,7 @@ class GlobalConfig:
         :return: Jira client.
         """
         return ConfluenceClient(
-            self.config.server.confluence,
+            str(self.config.server.confluence),
             self.secrets.user,
             self.secrets.token.get_secret_value(),
         )
@@ -210,10 +176,42 @@ class GlobalConfig:
         :return: Jira client.
         """
         return JiraClient(
-            self.config.server.jira,
+            str(self.config.server.jira),
             self.secrets.user,
             self.secrets.token.get_secret_value(),
         )
+
+
+def _parse_yaml_config(yaml_config_file: str) -> dict:
+    """
+    Constructs the configuration from YAML file.
+
+    :param yaml_config_file: YAML configuration file to parse.
+    :raises Exception: If configuration file is invalid.
+    """
+    logger.info("Parse YAML configuration from %s", yaml_config_file)
+
+    try:
+        with open(yaml_config_file, encoding="utf-8") as yaml_config:
+            return yaml.safe_load(yaml_config)
+    except Exception as error:
+        raise Exception("Failed to parse YAML configuration") from error
+
+
+def _parse_json_config(json_config_file: str) -> dict:
+    """
+    Constructs the configuration from JSON file.
+
+    :param json_config_file: JSON configuration file to parse.
+    :raises Exception: If configuration file is invalid.
+    """
+    logger.info("Parse JSON configuration from %s", json_config_file)
+
+    try:
+        with open(json_config_file, encoding="utf-8") as json_config:
+            return json.load(json_config)
+    except Exception as error:
+        raise Exception("Failed to parse JSON configuration") from error
 
 
 def load_global_config(config_file: str) -> GlobalConfig:
@@ -226,5 +224,11 @@ def load_global_config(config_file: str) -> GlobalConfig:
     .yaml, .yml).
     :raises ValidationError: If configuration is invalid.
     """
-    with open(config_file, encoding="utf-8") as file:
-        return GlobalConfig(Secrets(), Config.parse_raw(file.read()))
+    config_type = pathlib.Path(config_file).suffix
+    if config_type in [".yaml", ".yml"]:
+        config = _parse_yaml_config(config_file)
+    elif config_type == ".json":
+        config = _parse_json_config(config_file)
+    else:
+        raise Exception("Unknown file extension for configuration")
+    return GlobalConfig(Secrets(), Config.model_validate(config))

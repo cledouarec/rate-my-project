@@ -13,7 +13,7 @@
       "jql": "project = TEST",
       "report": {
         "space": "SPACE",
-        "parent_page": "My Parent Page",
+        "parent_page": "My Parent Page"
       },
       "workflow": [
         {
