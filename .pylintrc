@@ -9,7 +9,7 @@ ignored-modules=
 # List of classes names for which member attributes should not be checked
 # (useful for classes with attributes dynamically set). This supports can work
 # with qualified names.
-ignored-classes=
+ignored-classes=FieldInfo
 
 [FORMAT]
 # Good variable names which should always be accepted, separated by a comma
