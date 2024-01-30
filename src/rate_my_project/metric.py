@@ -6,6 +6,7 @@ Common metric interface.
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+import importlib
 import logging
 import os
 from typing import List, Optional
@@ -182,26 +183,8 @@ class MetricReport:
 
 class Metric(ABC):
     """
-    This class is used to provide an interface for all metrics and register
-    new metrics according to open-closed principle.
+    This class is used to provide an interface for all metrics.
     """
-
-    #: List used to register all metrics.
-    metrics_list: list = []
-
-    #: Define output directory.
-    OUTPUT_DIR: str = "out"
-
-    def __init_subclass__(cls, **kwargs):
-        """
-        Wrapper used to register metrics.
-        """
-        super().__init_subclass__(**kwargs)
-        cls.metrics_list.append(cls)
-
-        # Create output directory
-        if not os.path.exists(cls.OUTPUT_DIR):
-            os.mkdir(cls.OUTPUT_DIR)
 
     @abstractmethod
     def compute_dashboard(self, data: MetricData) -> List[dbc.Row]:
@@ -250,3 +233,52 @@ class Metric(ABC):
             md=12,
             lg=6,
         )
+
+
+class Metrics(Metric):
+    """
+    This class is used to manipulate all metrics registered.
+    """
+
+    #: Define output directory.
+    OUTPUT_DIR: str = "out"
+
+    def __init__(self, metric_names: list):
+        """
+        Constructs the list of metric from the `metric_names` list.
+
+        :param metric_names: List of metrics name.
+        """
+        if metric_names:
+            self._metrics = [
+                # Import the module and initialise it at the same time
+                importlib.import_module(metric_name,".").Plugin() for metric_name in metric_names
+            ]
+        else:
+            # If no plugin were set we use our default
+            self._metrics = [importlib.import_module('default', ".") .Plugin()]
+        
+        # Create output directory
+        if not os.path.exists(Metrics.OUTPUT_DIR):
+            os.mkdir(Metrics.OUTPUT_DIR)
+    
+    def compute_dashboard(self, data: MetricData) -> List[dbc.Row]:
+        """
+        Interface to compute widget of the dashboard related to this metric.
+
+        :param data: Metric input data.
+        :return: Dash widgets.
+        """
+        metrics_dashboard: list = []
+        for metric in self._metrics:
+            metrics_dashboard.extend(metric().compute_dashboard(data))
+        return metrics_dashboard
+
+    def compute_report(self, data: MetricData) -> MetricReport:
+        """
+        Interface to compute widget of the report related to this metric.
+
+        :param data: Metric input data.
+        :return: Report of the metric.
+        """
+    
