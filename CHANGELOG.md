@@ -1,3 +1,13 @@
+## 1.2.0 (2024-01-31)
+
+### Feat
+
+- improve plugin system
+
+### Fix
+
+- reduce exception scope
+
 ## 1.1.1 (2023-09-08)
 
 ### Fix
