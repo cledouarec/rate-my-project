@@ -196,8 +196,8 @@ def _parse_yaml_config(yaml_config_file: str) -> dict:
     try:
         with open(yaml_config_file, encoding="utf-8") as yaml_config:
             return yaml.safe_load(yaml_config)
-    except Exception as error:
-        raise Exception("Failed to parse YAML configuration") from error
+    except yaml.YAMLError as error:
+        raise ValueError("Failed to parse YAML configuration") from error
 
 
 def _parse_json_config(json_config_file: str) -> dict:
@@ -212,8 +212,8 @@ def _parse_json_config(json_config_file: str) -> dict:
     try:
         with open(json_config_file, encoding="utf-8") as json_config:
             return json.load(json_config)
-    except Exception as error:
-        raise Exception("Failed to parse JSON configuration") from error
+    except json.JSONDecodeError as error:
+        raise ValueError("Failed to parse JSON configuration") from error
 
 
 def load_global_config(config_file: str) -> GlobalConfig:
@@ -232,5 +232,5 @@ def load_global_config(config_file: str) -> GlobalConfig:
     elif config_type == ".json":
         config = _parse_json_config(config_file)
     else:
-        raise Exception("Unknown file extension for configuration")
+        raise ValueError("Unknown file extension for configuration")
     return GlobalConfig(Secrets(), Config.model_validate(config))
