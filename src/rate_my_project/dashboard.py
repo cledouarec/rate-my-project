@@ -15,7 +15,7 @@ import diskcache
 # from werkzeug.middleware.profiler import ProfilerMiddleware
 
 from .config import GlobalConfig
-from .metrics import Metric, MetricData
+from .metric import Metrics, MetricData
 from .utils import fetch_tickets_information
 
 # local cache to store query results
@@ -148,11 +148,9 @@ def on_run_button_clicked(_, jql):
     """
     if not jql:
         raise PreventUpdate
+    metrics = Metrics(CONFIG.config.metrics)
     tickets = fetch_data_for_metric_from_jql(jql)
-    metrics_dashboard: list = []
-    for metric in Metric.metrics_list:
-        metrics_dashboard.extend(metric().compute_dashboard(tickets))
-    return metrics_dashboard
+    return metrics.compute_dashboard(tickets)
 
 
 @application.callback(

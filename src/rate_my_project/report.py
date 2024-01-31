@@ -12,7 +12,7 @@ from jinja2 import Environment, ChoiceLoader, FileSystemLoader, PackageLoader
 
 from .config import GlobalConfig
 from .connectors import ConfluenceClient
-from .metrics import Metric, MetricData
+from .metric import Metrics, MetricData
 from .utils import fetch_tickets_information
 
 #: Create logger for this file.
@@ -36,7 +36,7 @@ def generate_report(
     output_space: str,
     output_parent_page: str,
     template: str,
-    metric_reports: dict,
+    metric_reports: list,
 ) -> None:
     """
     Generate the report for the `project_name`.
@@ -70,13 +70,15 @@ def generate_report(
     )
 
     # Add figures to the report
-    asyncio.run(
-        confluence_client.upload_files(
-            space=output_space,
-            title=project_name,
-            filenames=metric_reports["Status"].figures,
-        )
-    )
+    for metric_report in metric_reports:
+        if metric_report.figures:
+            asyncio.run(
+                confluence_client.upload_files(
+                    space=output_space,
+                    title=project_name,
+                    filenames=metric_report.figures,
+                )
+            )
 
     logger.debug("Report for %s generated", project_name)
 
@@ -94,15 +96,13 @@ def generate_all_reports(global_config: GlobalConfig) -> None:
             fetch_tickets_information(global_config.jira_client(), project.jql)
         )
         metric_data = MetricData.from_tickets_and_changelogs(
-            global_config.config.fields.dict(),
+            global_config.config.fields.model_dump(),
             project.workflow_to_dict(),
             *jira_information,
         )
 
-        reports = {}
-        for metric in Metric.metrics_list:
-            metric_report = metric().compute_report(metric_data)
-            reports[metric_report.metric_name] = metric_report
+        metrics = Metrics(global_config.config.metrics)
+        reports = metrics.compute_report(metric_data)
 
         generate_report(
             global_config.confluence_client(),

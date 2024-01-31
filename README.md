@@ -43,6 +43,11 @@ leaders who want to improve their team's efficiency and effectiveness. By using
 data to gain an objective view of the project's progress, they can make
 informed decisions and take actions that lead to better outcomes.
 
+In developing this tool, it became clear that defining universal metrics
+according to the topology of your JIRA projects was a complex task, so it was
+essential to be able to provide a simple way of adding your own metrics in the
+form of a plugin.
+
 ## Installation
 
 ### From PyPI (Recommended)
@@ -131,8 +136,9 @@ The configuration file support 2 formats :
 - [YAML format](https://yaml.org) (Recommended format)
 - [JSON format](https://www.json.org)
 
-In the configuration file, there are 3 main sections required :
+In the configuration file, there are 4 main sections required :
 - `server`
+- `metrics`
 - `fields`
 - `projects`
 
@@ -183,6 +189,30 @@ server:
 | server     |    ✅     | Main configuration node for server.              |
 | jira       |    ✅     | Jira server URL to retrieve tickets information. |
 | confluence |    ✅     | Confluence server URL to publish the report.     |
+
+### Metrics configuration
+
+The `metrics` node will define the list of metrics to be used to avoid
+unnecessary calculations or analysis.
+
+**_In Yaml :_**
+```yaml
+metrics:
+  - status
+```
+**_In Json :_**
+```json
+{
+  "metrics": [
+    "status"
+  ]
+}
+```
+
+| Attribute    | Required | Description                                            |
+|--------------|:--------:|--------------------------------------------------------|
+| metrics      |    ✅     | Main configuration node for metrics.                   |
+| \<metric\>   |    ✅     | List of metric name. At least one metric is mandatory  |
 
 ### Fields configuration
 

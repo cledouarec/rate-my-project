@@ -6,6 +6,8 @@ Helper functions.
 
 import logging
 
+import inflection
+
 from .connectors import JiraClient
 
 #: Create logger for this file.
@@ -30,3 +32,14 @@ async def fetch_tickets_information(
         parents = await jira_session.parents_from_tickets(tickets)
         # fields = await jira_session.fields_information()
         return tickets, changelogs, parents
+
+
+def to_snake_case(text: str) -> str:
+    """
+    Convert test to snake case.
+
+    :param text: Input text to convert.
+    :return: Text in snake case.
+    """
+    # underscore function do not replace the space
+    return inflection.underscore(text.replace(" ", "_"))

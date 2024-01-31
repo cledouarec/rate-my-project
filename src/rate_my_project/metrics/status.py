@@ -9,7 +9,8 @@ from typing import List
 import dash_bootstrap_components as dbc
 import plotly.express as px
 
-from .metric import Metric, MetricData, MetricReport
+from rate_my_project.metric import Metric, MetricData, MetricReport
+from rate_my_project.utils import to_snake_case
 
 #: Create logger for this file.
 logger = logging.getLogger()
@@ -44,10 +45,13 @@ class Status(Metric):
         figures = []
         issue_types = []
         for issue_type, figure in self.status_per_issue_type(data).items():
-            figure_path = f"{self.OUTPUT_DIR}/{issue_type}.png"
+            issue_type_snake_case = to_snake_case(issue_type)
+            figure_path = f"{self.OUTPUT_DIR}/{issue_type_snake_case}.png"
             figure.write_image(figure_path)
             figures.append(figure_path)
-            issue_types.append(issue_type)
+            issue_types.append(
+                {"type": issue_type, "path": issue_type_snake_case}
+            )
         return MetricReport(
             metric_name="Status",
             figures=figures,

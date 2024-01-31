@@ -126,6 +126,8 @@ class Config(ImmutableModel):
 
     #: Server configuration.
     server: Server
+    #: List of metrics
+    metrics: List[str]
     #: Fields configuration
     fields: Fields
     #: List of all projects
