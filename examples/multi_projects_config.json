@@ -3,6 +3,9 @@
     "jira": "https://my.jira.server.com",
     "confluence": "https://my.confluence.server.com"
   },
+  "metrics": [
+    "status"
+  ],
   "fields": {
     "sprint": "customfield_10001",
     "story_points": "customfield_10002"

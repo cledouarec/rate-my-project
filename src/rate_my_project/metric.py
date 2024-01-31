@@ -6,6 +6,7 @@ Common metric interface.
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+import importlib
 import logging
 import os
 from typing import List, Optional
@@ -182,26 +183,11 @@ class MetricReport:
 
 class Metric(ABC):
     """
-    This class is used to provide an interface for all metrics and register
-    new metrics according to open-closed principle.
+    This class is used to provide an interface for all metrics.
     """
-
-    #: List used to register all metrics.
-    metrics_list: list = []
 
     #: Define output directory.
     OUTPUT_DIR: str = "out"
-
-    def __init_subclass__(cls, **kwargs):
-        """
-        Wrapper used to register metrics.
-        """
-        super().__init_subclass__(**kwargs)
-        cls.metrics_list.append(cls)
-
-        # Create output directory
-        if not os.path.exists(cls.OUTPUT_DIR):
-            os.mkdir(cls.OUTPUT_DIR)
 
     @abstractmethod
     def compute_dashboard(self, data: MetricData) -> List[dbc.Row]:
@@ -250,3 +236,76 @@ class Metric(ABC):
             md=12,
             lg=6,
         )
+
+
+class Metrics:
+    """
+    This class is used to manipulate all metrics registered.
+    """
+
+    def __init__(self, metrics: list):
+        """
+        Constructs the list of metric from the `metrics` list.
+
+        :param metrics: List of metrics name.
+        """
+        self._metrics = Metrics._load_metrics(metrics)
+
+        # Create output directory
+        if not os.path.exists(Metric.OUTPUT_DIR):
+            os.mkdir(Metric.OUTPUT_DIR)
+
+    @staticmethod
+    def _load_metrics(metrics) -> List[Metric]:
+        """
+        Load all metrics as plugins.
+        By default, if no metrics is given, a default empty metric is loaded.
+
+        :param metrics: List of metrics name to load.
+        :return: Metrics classes loaded.
+        """
+        loaded_classes = []
+        for metric in metrics:
+            try:
+                metric_module = importlib.import_module(f"metrics.{metric}")
+                metric_class = None
+                for obj in metric_module.__dict__.values():
+                    if isinstance(obj, type) and Metric in obj.__bases__:
+                        metric_class = obj
+                        break
+                if metric_class:
+                    loaded_classes.append(metric_class())
+                    logger.debug("Loaded metric class: %s", metric)
+                else:
+                    logger.error(
+                        "No class inheriting from Metric found in metrics "
+                        "module %s",
+                        metric,
+                    )
+            except (ImportError, AttributeError) as e:
+                logger.error("Error loading metric class %s: %s", metric, e)
+        return loaded_classes
+
+    def compute_dashboard(self, data: MetricData) -> List[dbc.Row]:
+        """
+        Compute widgets of the dashboard related to all metrics.
+
+        :param data: Metric input data.
+        :return: Dash widgets.
+        """
+        metrics_dashboard: list = []
+        for metric in self._metrics:
+            metrics_dashboard.extend(metric.compute_dashboard(data))
+        return metrics_dashboard
+
+    def compute_report(self, data: MetricData) -> List[MetricReport]:
+        """
+        Compute report related to all metrics.
+
+        :param data: Metric input data.
+        :return: Report of all metrics.
+        """
+        metrics_report: list = []
+        for metric in self._metrics:
+            metrics_report.append(metric.compute_report(data))
+        return metrics_report

@@ -33,7 +33,7 @@ class HttpClient:
         logger.debug("Create Http client")
 
         if not http_url:
-            raise Exception("Http URL is invalid")
+            raise ValueError("Http URL is invalid")
         self._url: str = http_url
 
         #: Server authentication
