@@ -64,7 +64,7 @@ pip install rate-my-project
 ### From sources
 
 All the project is managed with **Poetry**. To install it, please visit the
-(official page)[https://python-poetry.org/docs/#installation] and follow these
+[official page](https://python-poetry.org/docs/#installation) and follow these
 instructions :
 ```shell
 poetry shell
@@ -72,9 +72,10 @@ poetry install --without dev
 ```
 
 For the developers, it is useful to install extra tools like :
+* [commitizen](https://commitizen-tools.github.io/commitizen/)
 * [pre-commit](https://pre-commit.com)
 * [pytest](http://docs.pytest.org)
-* [commitizen](https://commitizen-tools.github.io/commitizen/)
+* [ruff](https://docs.astral.sh/ruff/)
 
 These tools can be installed with the following command :
 ```shell
