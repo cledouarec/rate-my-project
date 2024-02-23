@@ -14,6 +14,7 @@ classifiers = [
     "Environment :: Console",
     "Topic :: Utilities",
 ]
+include = ["CHANGELOG.md"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
