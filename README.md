@@ -14,8 +14,11 @@
     - [Report mode](#report-mode)
   - [Configuration](#configuration)
     - [Server configuration](#server-configuration)
+    - [Metrics configuration](#metrics-configuration)
     - [Fields configuration](#fields-configuration)
     - [Project configuration](#project-configuration)
+      - [Report configuration](#report-configuration)
+      - [Workflow configuration](#workflow-configuration)
   - [Contribution](#contribution)
 
 ## Overview
@@ -60,14 +63,14 @@ pip install rate-my-project
 
 ### From sources
 
-It is recommended to use a virtual environment :
+All the project is managed with **Poetry**. To install it, please visit the
+(official page)[https://python-poetry.org/docs/#installation] and follow these
+instructions :
 ```shell
-python -m venv venv
+poetry shell
+poetry install --without dev
 ```
-To install the module and the main script, simply do :
-```shell
-pip install .
-```
+
 For the developers, it is useful to install extra tools like :
 * [pre-commit](https://pre-commit.com)
 * [pytest](http://docs.pytest.org)
@@ -75,15 +78,15 @@ For the developers, it is useful to install extra tools like :
 
 These tools can be installed with the following command :
 ```shell
-pip install '.[dev]'
+poetry install
 ```
 The Git hooks can be installed with :
 ```shell
-pre-commit install
+poetry run pre-commit install
 ```
 The hooks can be run manually at any time :
 ```shell
-pre-commit run --all-file
+poetry run pre-commit run --all-file
 ```
 
 ## Usage
@@ -91,7 +94,7 @@ pre-commit run --all-file
 The full list of arguments supported can be displayed with the following
 helper :
 ```shell
-./rate_my_project -h
+rate_my_project -h
 Usage: rate_my_project [OPTIONS] COMMAND [ARGS]...
 
   Swiss knife for measuring project efficiency.
@@ -114,7 +117,7 @@ interact with the results.
 
 This mode can be started by executing the following command :
 ```shell
-./rate_my_project explore my_config.yaml
+rate_my_project explore my_config.yaml
 ```
 The dashboard will be accessible at : http://127.0.0.1:8050
 
@@ -127,7 +130,7 @@ right query in exploration mode.
 
 This mode can be started by executing the following command :
 ```shell
-./rate_my_project report my_config.yaml
+rate_my_project report my_config.yaml
 ```
 
 ## Configuration

@@ -10,4 +10,4 @@ include LICENSE
 include setup.py
 
 # Include default template for Confluence
-include src/rate_my_project/metrics/templates/*.jinja2
+include rate_my_project/metrics/templates/*.jinja2
