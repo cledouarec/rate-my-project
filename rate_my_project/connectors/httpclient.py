@@ -22,12 +22,14 @@ class HttpClient:
         self,
         http_url: str,
         auth: Optional[BasicAuth] = None,
+        headers: Optional[dict] = None,
     ):
         """
         Constructs the Http client.
 
         :param http_url: URL to connect to Http server.
         :param auth: Authentication to connect to server.
+        :param headers: Headers used for all sessions.
         :raises Exception: If URL is empty.
         """
         logger.debug("Create Http client")
@@ -38,6 +40,9 @@ class HttpClient:
 
         #: Server authentication
         self._auth: Optional[BasicAuth] = auth
+
+        #: Headers for all session
+        self._headers: Optional[dict] = headers
 
         #: HTTP session
         self._session: Optional[ClientSession] = None
@@ -50,6 +55,7 @@ class HttpClient:
         """
         self._session = ClientSession(
             auth=self._auth,
+            headers=self._headers,
             raise_for_status=True,
             connector=TCPConnector(limit=50),
         )
@@ -81,6 +87,7 @@ class HttpClient:
         else:
             async with ClientSession(
                 auth=self._auth,
+                headers=self._headers,
                 raise_for_status=True,
                 connector=TCPConnector(limit=50),
             ) as session:
@@ -118,6 +125,7 @@ class HttpClient:
         else:
             async with ClientSession(
                 auth=self._auth,
+                headers=self._headers,
                 raise_for_status=True,
                 connector=TCPConnector(limit=50),
             ) as session:
@@ -156,6 +164,7 @@ class HttpClient:
         else:
             async with ClientSession(
                 auth=self._auth,
+                headers=self._headers,
                 raise_for_status=True,
                 connector=TCPConnector(limit=50),
             ) as session:
