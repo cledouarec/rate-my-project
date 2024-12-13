@@ -57,7 +57,7 @@ form of a plugin.
 
 You can install easily with the following command or insert into your
 requirements file :
-```
+```shell
 pip install rate-my-project
 ```
 
